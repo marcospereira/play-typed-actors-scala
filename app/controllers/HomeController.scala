@@ -1,6 +1,6 @@
 package controllers
 
-import actors.Bar
+import actors.Event
 import akka.actor.typed.ActorRef
 import javax.inject._
 import play.api.mvc._
@@ -10,7 +10,7 @@ import play.api.mvc._
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents, @Named("foo-actor") fooActor: ActorRef[String], fooBarActor: ActorRef[Bar]) extends AbstractController(cc) {
+class HomeController @Inject()(cc: ControllerComponents, eventActor: ActorRef[Event]) extends AbstractController(cc) {
 
   /**
    * Create an Action to render an HTML page.
@@ -24,8 +24,7 @@ class HomeController @Inject()(cc: ControllerComponents, @Named("foo-actor") foo
   }
 
   def action = Action {
-    fooActor.tell("a message")
-    fooBarActor.tell(Bar("a message"))
+    eventActor.tell(Event("a message"))
     Ok("actors were told a little secret")
   }
 }
